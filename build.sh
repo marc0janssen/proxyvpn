@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Name: docker-nzbgetvpn
-# Coder: Marco Janssen (twitter @marc0janssen)
-# date: 2021-11-28 14:24:26
-# update: 2021-11-28 14:24:32
+# Name: proxyvpn
+# Coder: Marco Janssen (micro.blog @marc0janssen)
+# date: 2025-01-19 20:24:26
+# update: 2025-01-19 20:24:26
 
 docker image rm marc0janssen/proxyvpn:stable
 

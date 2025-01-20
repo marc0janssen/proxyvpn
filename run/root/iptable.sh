@@ -68,19 +68,19 @@ if [[ "${DEBUG}" == "true" ]]; then
 fi
 
 # check we have iptable_mangle, if so setup fwmark
-lsmod | grep iptable_mangle
-iptable_mangle_exit_code="${?}"
+#lsmod | grep iptable_mangle
+#iptable_mangle_exit_code="${?}"
 
-if [[ "${iptable_mangle_exit_code}" == 0 ]]; then
+#if [[ "${iptable_mangle_exit_code}" == 0 ]]; then
 
-	echo "[info] iptable_mangle support detected, adding fwmark for tables"
+#	echo "[info] iptable_mangle support detected, adding fwmark for tables"
 
-	# setup route for nzbget webui http using set-mark to route traffic for port 6789 to lan interface
-	echo "6789    webui_http" >> /etc/iproute2/rt_tables
-	ip rule add fwmark 1 table webui_http
-	ip route add default via "${default_gateway}" table webui_http
+#	# setup route for nzbget webui http using set-mark to route traffic for port 6789 to lan interface
+#	echo "6789    webui_http" >> /etc/iproute2/rt_tables
+#	ip rule add fwmark 1 table webui_http
+#	ip route add default via "${default_gateway}" table webui_http
 
-fi
+#fi
 
 # input iptable rules
 ###
@@ -111,8 +111,8 @@ for vpn_remote_port_item in "${vpn_remote_port_list[@]}"; do
 done
 
 # accept input to nzbget webui port 6789
-iptables -A INPUT -i "${docker_interface}" -p tcp --dport 6789 -j ACCEPT
-iptables -A INPUT -i "${docker_interface}" -p tcp --sport 6789 -j ACCEPT
+#iptables -A INPUT -i "${docker_interface}" -p tcp --dport 6789 -j ACCEPT
+#iptables -A INPUT -i "${docker_interface}" -p tcp --sport 6789 -j ACCEPT
 
 # additional port list for scripts or container linking
 if [[ ! -z "${ADDITIONAL_PORTS}" ]]; then
@@ -197,17 +197,17 @@ for vpn_remote_port_item in "${vpn_remote_port_list[@]}"; do
 done
 
 # if iptable mangle is available (kernel module) then use mark
-if [[ "${iptable_mangle_exit_code}" == 0 ]]; then
+#if [[ "${iptable_mangle_exit_code}" == 0 ]]; then
 
 	# accept output from nzbget webui port 6789 - used for external access
-	iptables -t mangle -A OUTPUT -p tcp --dport 6789 -j MARK --set-mark 1
-	iptables -t mangle -A OUTPUT -p tcp --sport 6789 -j MARK --set-mark 1
+#	iptables -t mangle -A OUTPUT -p tcp --dport 6789 -j MARK --set-mark 1
+#	iptables -t mangle -A OUTPUT -p tcp --sport 6789 -j MARK --set-mark 1
 
-fi
+#fi
 
 # accept output from nzbget webui port 6789 - used for lan access
-iptables -A OUTPUT -o "${docker_interface}" -p tcp --dport 6789 -j ACCEPT
-iptables -A OUTPUT -o "${docker_interface}" -p tcp --sport 6789 -j ACCEPT
+#iptables -A OUTPUT -o "${docker_interface}" -p tcp --dport 6789 -j ACCEPT
+#iptables -A OUTPUT -o "${docker_interface}" -p tcp --sport 6789 -j ACCEPT
 
 
 # additional port list for scripts or container linking
