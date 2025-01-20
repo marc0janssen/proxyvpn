@@ -1,51 +1,17 @@
-# NZBgetVPN
-
-This version is a fork with the NZBGET updated to the latest version. I did this because I couldn't find a decent version that was upgraded to the latest version and also available on Docker Hub. This is not intended as a shameless copy of someone's work.
-
-**[[ This build holds a fork of nzbget since the original maintainer stopped his work on NZBGET. The fork I'm using is from [nzbgetcom](https://github.com/nzbgetcom/nzbget) ]]**
-
-
-## Versions
-
-[Vesion information](https://github.com/nzbgetcom/nzbget/releases)
-
-* Current stable version NZBGET: 24.5
-* Current testing version NZBGET: 24.6-testing-20241223
+# PROXYVPN
 
 Stable
 
 ```shell
-docker pull marc0janssen/docker-nzbgetvpn:stable
-```
-
-```shell
-docker pull marc0janssen/docker-nzbgetvpn:24.5
-```
-
-Testing
-
-```shell
-docker pull marc0janssen/docker-nzbgetvpn:testing
-```
-
-```shell
-docker pull marc0janssen/docker-nzbgetvpn:24.3-testing-202411223
+docker pull marc0janssen/proxyvpn:stable
 ```
 
 ## Application
 
-[Nzbget website](http://nzbget.com/)  
 [OpenVPN website](https://openvpn.net/)  
-
-## Description
-
-NZBGet is a cross-platform binary newsgrabber for nzb files, written in C++. It supports client/server mode, automatic par-check/-repair, web-interface, command-line interface, etc. NZBGet requires low system resources and runs great on routers, NAS-devices and media players.
-
-This Docker includes OpenVPN and WireGuard to ensure a secure and private connection to the Internet, including use of iptables to prevent IP leakage when the tunnel is down. It also includes Privoxy to allow unfiltered access to index sites, to use Privoxy please point your application at `http://<host ip>:8118`.
 
 ## Build notes
 
-Latest stable NZBGet release from Arch Linux repo (v24.5)
 Latest stable Privoxy release from Arch Linux repo.  
 Latest stable OpenVPN release from Arch Linux repo.  
 Latest stable WireGuard release from Arch Linux repo.
@@ -55,9 +21,8 @@ Latest stable WireGuard release from Arch Linux repo.
 ```shell
 docker run -d \
     --cap-add=NET_ADMIN \
-    -p 6789:6789 \
     --name=<container name> \
-    -v <path for data files>:/data \
+    -p 8118:8118
     -v <path for config files>:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e VPN_ENABLED=<yes|no> \
@@ -75,17 +40,10 @@ docker run -d \
     -e UMASK=<umask for created files> \
     -e PUID=<uid for user> \
     -e PGID=<gid for user> \
-    marc0janssen/docker-nzbgetvpn:stable
+    marc0janssen/proxyvpn:stable
 ```
 
 Please replace all user variables in the above command defined by <> with the correct values.
-
-## Access NZBGet
-
-`http://<host ip>:6789`
-
-username:- nzbget
-password:- tegbzn6789
 
 ## PIA provider
 
@@ -96,9 +54,8 @@ PIA users will need to supply VPN_USER and VPN_PASS, optionally define VPN_REMOT
 ```shell
 docker run -d \
     --cap-add=NET_ADMIN \
-    -p 6789:6789 \
-    --name=nzbgetvpn \
-    -v /root/docker/data:/data \
+    --name=proxyvpn \
+    -p 8118:8118 \
     -v /root/docker/config:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e VPN_ENABLED=yes \
@@ -115,7 +72,7 @@ docker run -d \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
-    marc0janssen/docker-nzbgetvpn:stable
+    marc0janssen/proxyvpn:stable
 ```
 
 ## AirVPN provider
@@ -136,7 +93,6 @@ docker run -d \
     --cap-add=NET_ADMIN \
     -p 6789:6789 \
     --name=nzbgetvpn \
-    -v /root/docker/data:/data \
     -v /root/docker/config:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e VPN_ENABLED=yes \
@@ -150,7 +106,7 @@ docker run -d \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
-    marc0janssen/docker-nzbgetvpn:stable
+    marc0janssen/proxyvpn:stable
 ```
 
 ## OpenVPN
@@ -191,12 +147,11 @@ version: "3"
 services:
   nzbget:
     container_name: nzbget
-    image: marc0janssen/docker-nzbgetvpn:stable
+    image: marc0janssen/proxyvpn:stable
     volumes:
       - /root/docker/config:/config
-      - /root/docker/data:/data
     ports:
-      - 6789:6789/tcp
+      - 8118:8118
     environment:
       - STRICT_PORT_FORWARD=yes
       - PGID=1000
